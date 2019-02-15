@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
     private void retrieveDataFromFirebase() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             db.collection(RECIPE_PATH)
-                    .whereEqualTo("category/categoryName", "Carne")
+                    .whereEqualTo("category.categoryName", "Carne")
                     .get()
                     .addOnCompleteListener(result -> result.getResult()
                             .forEach(action -> Log.d("RESULTADOS", action.getData().toString())));
