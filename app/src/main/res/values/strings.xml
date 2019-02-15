@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Tá na Mão</string>
+    <string name="app_label">label</string>
+    <string name="search_hint">hint</string>
+    <string name="my_ingredients">Meus Ingredientes</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="nav_header_title">Titulo</string>
+    <string name="nav_header_desc">Descricao</string>
+    <string name="nav_header_subtitle">Subtitulo</string>
+    <string name="favorites">Receitas favoritas</string>
+</resources>

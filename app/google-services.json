@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "177119417251",
+    "firebase_url": "https://ta-na-mao-ea4d4.firebaseio.com",
+    "project_id": "ta-na-mao-ea4d4",
+    "storage_bucket": "ta-na-mao-ea4d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177119417251:android:85eb9cbffd5c908c",
+        "android_client_info": {
+          "package_name": "com.example.tanamao"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177119417251-4it7iaap4cj4bdlgok8ulos1njip9rki.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tanamao",
+            "certificate_hash": "ff8d262c0e1998f7a4b36712d9bf6f85088126dc"
+          }
+        },
+        {
+          "client_id": "177119417251-domomiupn582uvb86fkp1hlerrt30nj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPytKBTfoW6AxQe_ZCx7_sYwEClk6wGew"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177119417251-domomiupn582uvb86fkp1hlerrt30nj6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
