@@ -18,7 +18,6 @@ public class Recipe implements Parcelable {
     private int servings;
     private List<String> steps;
     private List<Video> videos;
-    private Category category;
     private List<String> tags;
 
     public Recipe() {
@@ -26,7 +25,7 @@ public class Recipe implements Parcelable {
 
     public Recipe(String recipeId, String recipeName, float mediumAvaliation,
                   List<Ingredient> ingredient, String imagePath, int servings, List<String> steps,
-                  List<Video> videos, Category category, List<String> tags) {
+                  List<Video> videos, List<String> tags) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.averageRating = mediumAvaliation;
@@ -35,7 +34,6 @@ public class Recipe implements Parcelable {
         this.servings = servings;
         this.steps = steps;
         this.videos = videos;
-        this.category = category;
         this.tags = tags;
     }
 
@@ -101,14 +99,6 @@ public class Recipe implements Parcelable {
 
     public void setVideos(List<Video> videos) {
         this.videos = videos;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 
     public List<String> getTags() {

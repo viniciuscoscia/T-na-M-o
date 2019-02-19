@@ -8,6 +8,7 @@ import com.example.tanamao.entity.recipe.Category;
 import com.example.tanamao.entity.recipe.Ingredient;
 import com.example.tanamao.entity.recipe.Recipe;
 import com.example.tanamao.entity.recipe.Video;
+import com.example.tanamao.repository.FirebaseUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -30,10 +31,11 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
+import static com.example.tanamao.repository.FirebaseUtils.RECIPE_PATH;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String RECIPE_PATH = "recipe";
     private FirebaseFirestore db;
 
     @Override
@@ -83,7 +85,6 @@ public class MainActivity extends AppCompatActivity
 
         Recipe recipe = new Recipe();
         recipe.setAverageRating(3.5F);
-        recipe.setCategory(new Category("1", "Carne", null));
         recipe.setImagePath("caminhoImagem");
         recipe.setIngredients(new ArrayList<Ingredient>(){{
                 add(new Ingredient("0", "Sal"));
