@@ -1,54 +1,94 @@
 package com.example.tanamao.ui.activity.mainActivity;
 
-import android.os.Build;
 import android.os.Bundle;
-
-import com.example.tanamao.R;
-import com.example.tanamao.entity.recipe.Category;
-import com.example.tanamao.entity.recipe.Ingredient;
-import com.example.tanamao.entity.recipe.Recipe;
-import com.example.tanamao.entity.recipe.Video;
-import com.example.tanamao.repository.FirebaseUtils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import com.example.tanamao.R;
+import com.example.tanamao.entity.recipe.Ingredient;
+import com.example.tanamao.repository.FirebaseRepo;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
-import android.view.MenuItem;
-
-import java.util.ArrayList;
-
-import static com.example.tanamao.repository.FirebaseUtils.RECIPE_PATH;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProviders;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FirebaseFirestore db;
+    private ChipGroup availableIngredients;
+    private ChipGroup userIngredients;
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FirebaseApp.initializeApp(this);
-        db = FirebaseFirestore.getInstance();
-
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(this);
+
+        findViews();
+        setupInterfaceComponents();
+
+        setupViewModel();
+
+        populateAvailableIngredients();
+    }
+
+    private void populateAvailableIngredients() {
+        viewModel.getIngredients().observe(this, ingredients -> {
+            ingredients.clear();
+
+            for(Ingredient ingredient: ingredients) {
+                Chip chip = new Chip(this);
+                chip.setText(ingredient.getName());
+
+                chip.setClickable(true);
+                chip.setCheckable(true);
+                availableIngredients.addView(chip);
+            }
+        });
+    }
+
+    private void setupViewModel() {
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+    }
+
+    private void findViews() {
+        availableIngredients = findViewById(R.id.cg_available_ingredients);
+        userIngredients = findViewById(R.id.cg_user_ingredients);
+    }
+
+    private void setupInterfaceComponents() {
+        setupToolbarDrawer();
+        setupFAB();
+        setupNavigationView();
+    }
+
+    private void setupNavigationView() {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void setupToolbarDrawer() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+    }
 
+    private void setupFAB() {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,57 +97,8 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-//        testFirebase();
-        retrieveDataFromFirebase();
     }
 
-    private void retrieveDataFromFirebase() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            db.collection(RECIPE_PATH)
-                    .whereEqualTo("category.categoryName", "Carne")
-                    .get()
-                    .addOnCompleteListener(result -> result.getResult()
-                            .forEach(action -> Log.d("RESULTADOS", action.getData().toString())));
-        }
-    }
-
-    private void testFirebase() {
-
-        Recipe recipe = new Recipe();
-        recipe.setAverageRating(3.5F);
-        recipe.setImagePath("caminhoImagem");
-        recipe.setIngredients(new ArrayList<Ingredient>(){{
-                add(new Ingredient("0", "Sal"));
-            }});
-        recipe.setRecipeId("1");
-        recipe.setVideos(new ArrayList<Video>(){{
-            add(new Video("www.exemplo.com/idVideo2", "exemplo.com"));
-        }});
-        recipe.setServings(2);
-        recipe.setRecipeName("RecipeName2");
-        recipe.setTags(new ArrayList<String>(){{
-            add("Carne");
-        }});
-        recipe.setSteps(new ArrayList<String>(){{
-            add("Passo 1");
-        }});
-
-        db.collection(RECIPE_PATH)
-                .add(recipe)
-                .addOnSuccessListener(response -> Log.d(MainActivity.class.getName(), response.getId()))
-                .addOnFailureListener(failure -> Log.d(MainActivity.class.getName(), failure.getMessage()));
-
-    }
 
     @Override
     public void onBackPressed() {
