@@ -31,7 +31,7 @@ public class FirebaseUtils {
             add(new Ingredient("8","costela suína"));
             add(new Ingredient("9","salsicha"));
             add(new Ingredient("10","batata"));
-            add(new Ingredient("11","asa de frangp"));
+            add(new Ingredient("11","asa de frango"));
             add(new Ingredient("12","peito de frango"));
             add(new Ingredient("13","frango inteiro"));
             add(new Ingredient("14","tomate"));

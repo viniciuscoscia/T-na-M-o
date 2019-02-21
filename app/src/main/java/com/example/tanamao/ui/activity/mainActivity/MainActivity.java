@@ -3,11 +3,10 @@ package com.example.tanamao.ui.activity.mainActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.tanamao.R;
 import com.example.tanamao.entity.recipe.Ingredient;
-import com.example.tanamao.repository.FirebaseRepo;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -41,18 +40,38 @@ public class MainActivity extends AppCompatActivity
         setupViewModel();
 
         populateAvailableIngredients();
+        populateUserIngredients();
     }
 
-    private void populateAvailableIngredients() {
-        viewModel.getIngredients().observe(this, ingredients -> {
-            ingredients.clear();
-
-            for(Ingredient ingredient: ingredients) {
+    private void populateUserIngredients() {
+        viewModel.getUserIngredients().observe(this, ingredients -> {
+            userIngredients.removeAllViews();
+            for (Ingredient ingredient : ingredients) {
                 Chip chip = new Chip(this);
                 chip.setText(ingredient.getName());
 
                 chip.setClickable(true);
-                chip.setCheckable(true);
+                chip.setOnClickListener(view -> {
+                    viewModel.removeUserIngredient(ingredient);
+                    userIngredients.removeView(view);
+                });
+                userIngredients.addView(chip);
+            }
+        });
+    }
+
+    private void populateAvailableIngredients() {
+        viewModel.getAvailableIngredients().observe(this, ingredients -> {
+        availableIngredients.removeAllViews();
+            for (Ingredient ingredient : ingredients) {
+                Chip chip = new Chip(this);
+                chip.setText(ingredient.getName());
+
+                chip.setClickable(true);
+                chip.setOnClickListener(view -> {
+                    viewModel.addToMyUserIngredients(ingredient);
+                    availableIngredients.removeView(view);
+                });
                 availableIngredients.addView(chip);
             }
         });
@@ -69,8 +88,12 @@ public class MainActivity extends AppCompatActivity
 
     private void setupInterfaceComponents() {
         setupToolbarDrawer();
-        setupFAB();
         setupNavigationView();
+        setupBottomSheet();
+    }
+
+    private void setupBottomSheet() {
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet_layout));
     }
 
     private void setupNavigationView() {
@@ -86,17 +109,6 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-    }
-
-    private void setupFAB() {
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
 
