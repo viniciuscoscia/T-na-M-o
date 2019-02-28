@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity
         FirebaseApp.initializeApp(this);
 
         firebaseUtils = new FirebaseUtils(this);
+        firebaseUtils.insertRecipe();
 
         findViews();
         setupInterfaceComponents();
 
         setupViewModel();
 
-        firebaseUtils.checkIfIngredientExists(new Ingredient("sdasd"));
 
         populateChipGroups();
     }

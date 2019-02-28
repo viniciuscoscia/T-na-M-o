@@ -3,8 +3,6 @@ package com.example.tanamao.entity.recipe;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.tanamao.repository.FirebaseUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,25 +16,20 @@ public class Recipe implements Parcelable {
     private List<Ingredient> ingredients;
     private String imagePath;
     private int servings;
-    private List<String> steps;
-    private List<Video> videos;
-    private List<String> tags;
+    private String recipeInstructions;
 
     public Recipe() {
     }
 
     public Recipe(String recipeId, String recipeName, float mediumAvaliation,
-                  List<Ingredient> ingredient, String imagePath, int servings, List<String> steps,
-                  List<Video> videos, List<String> tags) {
+                  List<Ingredient> ingredient, String imagePath, int servings, String recipeInstructions) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.averageRating = mediumAvaliation;
         this.ingredients = ingredient;
         this.imagePath = imagePath;
         this.servings = servings;
-        this.steps = steps;
-        this.videos = videos;
-        this.tags = tags;
+        this.recipeInstructions = recipeInstructions;
     }
 
     public String getRecipeId() {
@@ -68,7 +61,6 @@ public class Recipe implements Parcelable {
     }
 
     public void setIngredients(ArrayList<Ingredient> ingredients) {
-        FirebaseUtils.insertIngredients(ingredients);
         this.ingredients = ingredients;
     }
 
@@ -88,28 +80,12 @@ public class Recipe implements Parcelable {
         this.servings = servings;
     }
 
-    public List<String> getSteps() {
-        return steps;
+    public String getRecipeInstructions() {
+        return recipeInstructions;
     }
 
-    public void setSteps(List<String> steps) {
-        this.steps = steps;
-    }
-
-    public List<Video> getVideos() {
-        return videos;
-    }
-
-    public void setVideos(List<Video> videos) {
-        this.videos = videos;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setRecipeInstructions(String recipeInstructions) {
+        this.recipeInstructions = recipeInstructions;
     }
 
     protected Recipe(Parcel in) {
@@ -118,8 +94,7 @@ public class Recipe implements Parcelable {
         averageRating = in.readFloat();
         imagePath = in.readString();
         servings = in.readInt();
-        steps = in.createStringArrayList();
-        tags = in.createStringArrayList();
+        recipeInstructions = in.readString();
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -146,7 +121,6 @@ public class Recipe implements Parcelable {
         dest.writeFloat(averageRating);
         dest.writeString(imagePath);
         dest.writeInt(servings);
-        dest.writeStringList(steps);
-        dest.writeStringList(tags);
+        dest.writeString(recipeInstructions);
     }
 }
