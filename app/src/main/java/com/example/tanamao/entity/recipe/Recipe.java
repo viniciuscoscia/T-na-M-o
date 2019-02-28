@@ -3,6 +3,8 @@ package com.example.tanamao.entity.recipe;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.tanamao.repository.FirebaseUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +68,7 @@ public class Recipe implements Parcelable {
     }
 
     public void setIngredients(ArrayList<Ingredient> ingredients) {
+        FirebaseUtils.insertIngredients(ingredients);
         this.ingredients = ingredients;
     }
 

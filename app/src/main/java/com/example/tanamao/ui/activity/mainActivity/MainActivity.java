@@ -6,27 +6,30 @@ import android.view.MenuItem;
 
 import com.example.tanamao.R;
 import com.example.tanamao.entity.recipe.Ingredient;
+import com.example.tanamao.repository.FirebaseUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
+
+import java.util.List;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ChipGroup availableIngredients;
-    private ChipGroup userIngredients;
+    private ChipGroup availableIngredientsChipGroup;
+    private ChipGroup userIngredientsChipGroup;
     private MainViewModel viewModel;
+    private FirebaseUtils firebaseUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,45 +37,36 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
 
+        firebaseUtils = new FirebaseUtils(this);
+
         findViews();
         setupInterfaceComponents();
 
         setupViewModel();
 
-        populateAvailableIngredients();
-        populateUserIngredients();
+        firebaseUtils.checkIfIngredientExists(new Ingredient("sdasd"));
+
+        populateChipGroups();
     }
 
-    private void populateUserIngredients() {
-        viewModel.getUserIngredients().observe(this, ingredients -> {
-            userIngredients.removeAllViews();
+    private void populateChipGroups() {
+        executePopulate(viewModel.getAvailableIngredients(), availableIngredientsChipGroup);
+        executePopulate(viewModel.getUserIngredients(), userIngredientsChipGroup);
+    }
+
+    private void executePopulate(MutableLiveData<List<Ingredient>> ingredientList,
+                                 ChipGroup chipGroup) {
+        ingredientList.observe(this, ingredients -> {
+            chipGroup.removeAllViews();
             for (Ingredient ingredient : ingredients) {
                 Chip chip = new Chip(this);
                 chip.setText(ingredient.getName());
-
                 chip.setClickable(true);
                 chip.setOnClickListener(view -> {
-                    viewModel.removeUserIngredient(ingredient);
-                    userIngredients.removeView(view);
+                    viewModel.ingredientClickEvent(ingredient);
+                    chipGroup.removeView(view);
                 });
-                userIngredients.addView(chip);
-            }
-        });
-    }
-
-    private void populateAvailableIngredients() {
-        viewModel.getAvailableIngredients().observe(this, ingredients -> {
-        availableIngredients.removeAllViews();
-            for (Ingredient ingredient : ingredients) {
-                Chip chip = new Chip(this);
-                chip.setText(ingredient.getName());
-
-                chip.setClickable(true);
-                chip.setOnClickListener(view -> {
-                    viewModel.addToMyUserIngredients(ingredient);
-                    availableIngredients.removeView(view);
-                });
-                availableIngredients.addView(chip);
+                chipGroup.addView(chip);
             }
         });
     }
@@ -82,8 +76,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void findViews() {
-        availableIngredients = findViewById(R.id.cg_available_ingredients);
-        userIngredients = findViewById(R.id.cg_user_ingredients);
+        availableIngredientsChipGroup = findViewById(R.id.cg_available_ingredients);
+        userIngredientsChipGroup = findViewById(R.id.cg_user_ingredients);
     }
 
     private void setupInterfaceComponents() {

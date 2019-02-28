@@ -4,35 +4,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Ingredient implements Parcelable {
-    private String id;
+    private int id = -1;
     private String name;
 
-    public Ingredient() {
+    private Ingredient() {
     }
 
-    public Ingredient(String id, String name) {
-        this.id = id;
+    public Ingredient(String name) {
         this.name = name;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
+    public Ingredient(int id, String name) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
     }
 
     protected Ingredient(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         name = in.readString();
     }
 
@@ -55,7 +43,27 @@ public class Ingredient implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeString(name);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public static Creator<Ingredient> getCREATOR() {
+        return CREATOR;
     }
 }
