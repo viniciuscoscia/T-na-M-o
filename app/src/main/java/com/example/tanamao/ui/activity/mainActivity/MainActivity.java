@@ -203,10 +203,18 @@ public class MainActivity extends AppCompatActivity
         recipe.setRecipeId("2");
         recipe.setServings(15);
         recipe.setRecipeName("Lasanha de Carne Moída");
-        recipe.setRecipeInstructions("1 - Cozinhe as batatas e amasse bem, coloque em uma panela junte o leite, a manteiga e o sal e faça um purê (ele tem que fivar mais firme) e reserve.\n" +
-                "2 - Em uma panela doure a cebola com azeite e acrescente o frango, o milho verde, a ervilha, as azeitonas e o molho de tomate e mecha bem. Coloque a agua e o caldo de frango e deixe ferver ate que o molho fique bem sequinho, desligue e acrescente o cheiro verde e reserve.\n" +
-                "3 - Pegue um refratario unte com manteiga e forre o fundo com a metade do purê coloque o molho e em seguida o presunto e metade da mussarela, coloque o restante do purê e por cima o restante da mussarela, salpique queijo ralado e leve ao forno por 20 min.\n" +
-                "4 - Sirva acompanhado com arroz branco e bom apetite!!");
+        recipe.setRecipeInstructions("LASANHA:\n" +
+                "1 - Cozinhe a massa segundo as orientações do fabricante, despeje em um refratário com água gelada para não grudar e reserve.\n" +
+                "MOLHO À BOLONHESA:\n" +
+                "1 - Refogue o alho, a cebola, a carne moída, o molho de tomate, deixe cozinhar por 3 minutos e reserve.\n" +
+                "MOLHO BRANCO:\n" +
+                "1 - Derreta a margarina, coloque as 3 colheres de farinha de trigo e mexa.\n" +
+                "2 - Despeje o leite aos poucos e continue mexendo.\n" +
+                "3 - Por último, coloque o creme de leite, mexa por 1 minuto e desligue o fogo.\n" +
+                "MONTAGEM:\n" +
+                "1 - Despeje uma parte do molho à bolonhesa em um refratário, a metade da massa, a metade do presunto, a metade da mussarela, todo o molho branco e o restante da massa.\n" +
+                "2 - Repita as camadas até a borda do recipiente.\n" +
+                "3 - Finalize com o queijo ralado e leve ao forno alto (220° C), preaquecido, por cerca de 20 minutos.");
 
         firebaseUtils.insertRecipe(recipe, ingredientsTags, this);
     }
