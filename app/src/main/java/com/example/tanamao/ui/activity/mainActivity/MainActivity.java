@@ -159,61 +159,54 @@ public class MainActivity extends AppCompatActivity
 
     public void insertRecipe() {
         Recipe recipe = new Recipe();
-        recipe.setAverageRating(3.5F);
+        recipe.setAverageRating(4.7F);
         recipe.setImagePath("https://firebasestorage.googleapis.com/v0/b/ta-na-mao-ea4d4.appspot.com/o/recipe%2Ffeijoada.jpg?alt=media&token=9854088c-0439-4364-8c95-1f1dc12b2961");
 
         List<Ingredient> ingredientsTags = new ArrayList<Ingredient>() {{
-            add(new Ingredient("feijão preto"));
-            add(new Ingredient("carne seca"));
-            add(new Ingredient("orelha de porco"));
-            add(new Ingredient("rabo de porco"));
-            add(new Ingredient("pé de porco"));
-            add(new Ingredient("costelinha de porco"));
-            add(new Ingredient("lombo de porco"));
-            add(new Ingredient("paio"));
-            add(new Ingredient("lingüiça portuguesa"));
-            add(new Ingredient("cebola"));
-            add(new Ingredient("cebolinha verde"));
-            add(new Ingredient("louro"));
-            add(new Ingredient("alho"));
-            add(new Ingredient("pimenta do reino"));
-            add(new Ingredient("laranja"));
-            add(new Ingredient("pinga"));
+            add(new Ingredient("massa de lasanha"));
+            add(new Ingredient("carne moída"));
+            add(new Ingredient("creme de leite"));
+            add(new Ingredient("manteiga"));
+            add(new Ingredient("farinha de trigo"));
+            add(new Ingredient("presunto"));
+            add(new Ingredient("mussarela"));
             add(new Ingredient("sal"));
+            add(new Ingredient("leite"));
+            add(new Ingredient("cebola"));
+            add(new Ingredient("óleo"));
+            add(new Ingredient("molho de tomate"));
+            add(new Ingredient("alho"));
+            add(new Ingredient("queijo parmesão ralado"));
         }};
         for (Ingredient ingredient : ingredientsTags) {
             ingredient.setName(ingredient.getName().toLowerCase());
         }
 
         List<String> ingredients = new ArrayList<String>() {{
-            add("1 Kg de feijão preto");
-            add("100 g de carne seca");
-            add("70 g de orelha de porco");
-            add("70 g de rabo de porco");
-            add("70 g de pé de porco");
-            add("100 g de costelinha de porco");
-            add("50 g de lombo de porco");
-            add("100 g de paio");
-            add("150 g de lingüiça portuguesa");
-            add("2 cebolas grandes picadinhas");
-            add("1 maço de cebolinha verde picadinha");
-            add("3 folhas de louro");
-            add("6 dentes de alho");
-            add("Pimenta do reino a gosto");
-            add("1 ou 2 laranjas");
-            add("40 ml de de pinga");
-            add("Sal se precisar");
+            add("500 g de massa de lasanha");
+            add("500 g de carne moída");
+            add("2 caixas de creme de leite");
+            add("3 colheres de manteiga");
+            add("3 colheres de farinha de trigo");
+            add("500 g de presunto");
+            add("500 g de mussarela");
+            add("sal a gosto");
+            add("2 copos de leite");
+            add("1 cebola ralada");
+            add("3 colheres de óleo");
+            add("1 caixa de molho de tomate");
+            add("3 dentes de alho amassados");
+            add("1 pacote de queijo ralado");
         }};
 
         recipe.setIngredients(ingredients);
-        recipe.setRecipeId("0");
-        recipe.setServings(4);
-        recipe.setRecipeName("Feijoada");
-        recipe.setRecipeInstructions("1 - Coloque as carnes de molho por 36 horas ou mais, vá trocando a água várias vezes, " +
-                "se for ambiente quente ou verão, coloque gelo por cima ou em camadas frias.\n" +
-                "2 - Coloque para cozinhar passo a passo: as carnes duras, em seguida as carnes moles.\n" +
-                "3 - Quando estiver mole coloque o feijão, e retire as carnes.\n" +
-                "4 - Finalmente tempere o feijão.");
+        recipe.setRecipeId("2");
+        recipe.setServings(15);
+        recipe.setRecipeName("Lasanha de Carne Moída");
+        recipe.setRecipeInstructions("1 - Cozinhe as batatas e amasse bem, coloque em uma panela junte o leite, a manteiga e o sal e faça um purê (ele tem que fivar mais firme) e reserve.\n" +
+                "2 - Em uma panela doure a cebola com azeite e acrescente o frango, o milho verde, a ervilha, as azeitonas e o molho de tomate e mecha bem. Coloque a agua e o caldo de frango e deixe ferver ate que o molho fique bem sequinho, desligue e acrescente o cheiro verde e reserve.\n" +
+                "3 - Pegue um refratario unte com manteiga e forre o fundo com a metade do purê coloque o molho e em seguida o presunto e metade da mussarela, coloque o restante do purê e por cima o restante da mussarela, salpique queijo ralado e leve ao forno por 20 min.\n" +
+                "4 - Sirva acompanhado com arroz branco e bom apetite!!");
 
         firebaseUtils.insertRecipe(recipe, ingredientsTags, this);
     }
