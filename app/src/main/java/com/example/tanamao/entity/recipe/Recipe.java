@@ -3,7 +3,6 @@ package com.example.tanamao.entity.recipe;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe implements Parcelable {
@@ -13,7 +12,18 @@ public class Recipe implements Parcelable {
     private String recipeId;
     private String recipeName;
     private float averageRating;
-    private List<Ingredient> ingredients;
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+    private List<Ingredient> ingredientsTags;
     private String imagePath;
     private int servings;
     private String recipeInstructions;
@@ -21,15 +31,30 @@ public class Recipe implements Parcelable {
     public Recipe() {
     }
 
-    public Recipe(String recipeId, String recipeName, float mediumAvaliation,
-                  List<Ingredient> ingredient, String imagePath, int servings, String recipeInstructions) {
+    private List<String> ingredients;
+
+    public Recipe(String recipeId, String recipeName, float averageRating,
+                  List<Ingredient> ingredientsTags, List<String> ingredients, String imagePath,
+                  int servings, String recipeInstructions) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
-        this.averageRating = mediumAvaliation;
-        this.ingredients = ingredient;
+        this.averageRating = averageRating;
+        this.ingredientsTags = ingredientsTags;
+        this.ingredients = ingredients;
         this.imagePath = imagePath;
         this.servings = servings;
         this.recipeInstructions = recipeInstructions;
+    }
+
+    protected Recipe(Parcel in) {
+        recipeId = in.readString();
+        recipeName = in.readString();
+        averageRating = in.readFloat();
+        ingredientsTags = in.createTypedArrayList(Ingredient.CREATOR);
+        ingredients = in.createStringArrayList();
+        imagePath = in.readString();
+        servings = in.readInt();
+        recipeInstructions = in.readString();
     }
 
     public String getRecipeId() {
@@ -56,12 +81,12 @@ public class Recipe implements Parcelable {
         this.averageRating = averageRating;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public List<Ingredient> getIngredientsTags() {
+        return ingredientsTags;
     }
 
-    public void setIngredients(ArrayList<Ingredient> ingredients) {
-        this.ingredients = ingredients;
+    public void setIngredientsTags(List<Ingredient> ingredientsTags) {
+        this.ingredientsTags = ingredientsTags;
     }
 
     public String getImagePath() {
@@ -88,26 +113,13 @@ public class Recipe implements Parcelable {
         this.recipeInstructions = recipeInstructions;
     }
 
-    protected Recipe(Parcel in) {
-        recipeId = in.readString();
-        recipeName = in.readString();
-        averageRating = in.readFloat();
-        imagePath = in.readString();
-        servings = in.readInt();
-        recipeInstructions = in.readString();
+    public List<String> getIngredients() {
+        return ingredients;
     }
 
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
-        @Override
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
+    public void setIngredients(List<String> ingredients) {
+        this.ingredients = ingredients;
+    }
 
     @Override
     public int describeContents() {
@@ -119,6 +131,8 @@ public class Recipe implements Parcelable {
         dest.writeString(recipeId);
         dest.writeString(recipeName);
         dest.writeFloat(averageRating);
+        dest.writeTypedList(ingredientsTags);
+        dest.writeStringList(ingredients);
         dest.writeString(imagePath);
         dest.writeInt(servings);
         dest.writeString(recipeInstructions);
