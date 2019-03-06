@@ -12,26 +12,14 @@ public class Recipe implements Parcelable {
     private String recipeId;
     private String recipeName;
     private float averageRating;
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
-        @Override
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
-    private List<Ingredient> ingredientsTags;
     private String imagePath;
     private int servings;
     private String recipeInstructions;
+    private List<Ingredient> ingredientsTags;
+    private List<String> ingredients;
 
     public Recipe() {
     }
-
-    private List<String> ingredients;
 
     public Recipe(String recipeId, String recipeName, float averageRating,
                   List<Ingredient> ingredientsTags, List<String> ingredients, String imagePath,
@@ -56,6 +44,18 @@ public class Recipe implements Parcelable {
         servings = in.readInt();
         recipeInstructions = in.readString();
     }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     public String getRecipeId() {
         return recipeId;

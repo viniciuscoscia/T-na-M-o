@@ -1,19 +1,14 @@
 package com.example.tanamao.repository;
 
-import com.example.tanamao.entity.recipe.Ingredient;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
-import java.util.Objects;
-
-import androidx.lifecycle.MutableLiveData;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class FirebaseRepo {
     public static final String RECIPE_COLLECTION = "recipes";
     public static final String INGREDIENT_COLLECTION = "ingredients";
 
-    private static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private MutableLiveData<List<Ingredient>> ingredientList = new MutableLiveData<>();
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private static FirebaseRepo firebaseRepo;
 
     private FirebaseRepo(){}
@@ -25,25 +20,16 @@ public class FirebaseRepo {
         return firebaseRepo;
     }
 
-    public MutableLiveData<List<Ingredient>> getIngredients() {
-            firebaseFirestore.collection(INGREDIENT_COLLECTION)
-                    .get()
-                    .addOnCompleteListener(response -> {
-                        if(!response.isSuccessful()) {
-                            return;
-                        }
-                        List<Ingredient> ingredients = Objects.requireNonNull(response
-                                .getResult())
-                                .toObjects(Ingredient.class);
-
-                        ingredientList.setValue(ingredients);
-                    })
-                    .addOnFailureListener(Throwable::printStackTrace);
-
-            return ingredientList;
+    public Task<QuerySnapshot> getIngredients() {
+            return firebaseFirestore
+                    .collection(INGREDIENT_COLLECTION)
+                    .get();
     }
 
-    public static FirebaseFirestore getFirestoreDB() {
-        return firebaseFirestore;
+    public Task<QuerySnapshot> getRecipes() {
+        return firebaseFirestore
+                .collection(RECIPE_COLLECTION)
+                .get();
     }
+
 }

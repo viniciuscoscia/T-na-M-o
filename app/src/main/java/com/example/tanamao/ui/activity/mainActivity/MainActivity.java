@@ -1,5 +1,6 @@
 package com.example.tanamao.ui.activity.mainActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,6 +9,8 @@ import com.example.tanamao.R;
 import com.example.tanamao.entity.recipe.Ingredient;
 import com.example.tanamao.entity.recipe.Recipe;
 import com.example.tanamao.repository.FirebaseUtils;
+import com.example.tanamao.ui.activity.recipeDetailActivity.RecipeDetailActivity;
+import com.example.tanamao.ui.adapter.RecipeAdapter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -24,14 +27,19 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        RecipeAdapter.RecipeClickListener{
 
     private ChipGroup availableIngredientsChipGroup;
     private ChipGroup userIngredientsChipGroup;
     private MainViewModel viewModel;
     private FirebaseUtils firebaseUtils;
+    private RecyclerView recyclerView;
+    private RecipeAdapter recipeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +48,29 @@ public class MainActivity extends AppCompatActivity
         FirebaseApp.initializeApp(this);
 
         firebaseUtils = new FirebaseUtils(this);
-        insertRecipe();
 
         findViews();
         setupInterfaceComponents();
         setupViewModel();
+        setupReciclerView();
+        getRecipes();
 
         populateChipGroups();
+    }
+
+    private void setupReciclerView() {
+        recipeAdapter = new RecipeAdapter(this, this);
+
+        recyclerView = findViewById(R.id.rv_recipes);
+        recyclerView.setAdapter(recipeAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+    }
+
+    private void getRecipes() {
+        viewModel.loadRecipes().observe(this, recipes -> {
+            recipeAdapter.setRecipeList(recipes);
+        });
     }
 
     private void populateChipGroups() {
@@ -78,6 +102,7 @@ public class MainActivity extends AppCompatActivity
     private void findViews() {
         availableIngredientsChipGroup = findViewById(R.id.cg_available_ingredients);
         userIngredientsChipGroup = findViewById(R.id.cg_user_ingredients);
+        recyclerView = findViewById(R.id.rv_recipes);
     }
 
     private void setupInterfaceComponents() {
@@ -157,65 +182,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void insertRecipe() {
-        Recipe recipe = new Recipe();
-        recipe.setAverageRating(4.7F);
-        recipe.setImagePath("https://firebasestorage.googleapis.com/v0/b/ta-na-mao-ea4d4.appspot.com/o/recipe%2Ffeijoada.jpg?alt=media&token=9854088c-0439-4364-8c95-1f1dc12b2961");
-
-        List<Ingredient> ingredientsTags = new ArrayList<Ingredient>() {{
-            add(new Ingredient("massa de lasanha"));
-            add(new Ingredient("carne moída"));
-            add(new Ingredient("creme de leite"));
-            add(new Ingredient("manteiga"));
-            add(new Ingredient("farinha de trigo"));
-            add(new Ingredient("presunto"));
-            add(new Ingredient("mussarela"));
-            add(new Ingredient("sal"));
-            add(new Ingredient("leite"));
-            add(new Ingredient("cebola"));
-            add(new Ingredient("óleo"));
-            add(new Ingredient("molho de tomate"));
-            add(new Ingredient("alho"));
-            add(new Ingredient("queijo parmesão ralado"));
-        }};
-        for (Ingredient ingredient : ingredientsTags) {
-            ingredient.setName(ingredient.getName().toLowerCase());
-        }
-
-        List<String> ingredients = new ArrayList<String>() {{
-            add("500 g de massa de lasanha");
-            add("500 g de carne moída");
-            add("2 caixas de creme de leite");
-            add("3 colheres de manteiga");
-            add("3 colheres de farinha de trigo");
-            add("500 g de presunto");
-            add("500 g de mussarela");
-            add("sal a gosto");
-            add("2 copos de leite");
-            add("1 cebola ralada");
-            add("3 colheres de óleo");
-            add("1 caixa de molho de tomate");
-            add("3 dentes de alho amassados");
-            add("1 pacote de queijo ralado");
-        }};
-
-        recipe.setIngredients(ingredients);
-        recipe.setRecipeId("2");
-        recipe.setServings(15);
-        recipe.setRecipeName("Lasanha de Carne Moída");
-        recipe.setRecipeInstructions("LASANHA:\n" +
-                "1 - Cozinhe a massa segundo as orientações do fabricante, despeje em um refratário com água gelada para não grudar e reserve.\n" +
-                "MOLHO À BOLONHESA:\n" +
-                "1 - Refogue o alho, a cebola, a carne moída, o molho de tomate, deixe cozinhar por 3 minutos e reserve.\n" +
-                "MOLHO BRANCO:\n" +
-                "1 - Derreta a margarina, coloque as 3 colheres de farinha de trigo e mexa.\n" +
-                "2 - Despeje o leite aos poucos e continue mexendo.\n" +
-                "3 - Por último, coloque o creme de leite, mexa por 1 minuto e desligue o fogo.\n" +
-                "MONTAGEM:\n" +
-                "1 - Despeje uma parte do molho à bolonhesa em um refratário, a metade da massa, a metade do presunto, a metade da mussarela, todo o molho branco e o restante da massa.\n" +
-                "2 - Repita as camadas até a borda do recipiente.\n" +
-                "3 - Finalize com o queijo ralado e leve ao forno alto (220° C), preaquecido, por cerca de 20 minutos.");
-
-        firebaseUtils.insertRecipe(recipe, ingredientsTags, this);
+    @Override
+    public void startRecipeActivity(Recipe recipe) {
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra(Recipe.RECIPE_KEY, recipe);
+        startActivity(intent);
     }
 }

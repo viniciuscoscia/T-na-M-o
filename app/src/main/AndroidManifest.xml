@@ -12,12 +12,15 @@
         android:theme="@style/AppThemeAppCompat"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
+            android:name=".ui.activity.recipeDetailActivity.RecipeDetailActivity"
+            android:label="RECEITA"
+            android:theme="@style/AppThemeMaterial.NoActionBar"/>
+        <activity
             android:name=".ui.activity.mainActivity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppThemeMaterial.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

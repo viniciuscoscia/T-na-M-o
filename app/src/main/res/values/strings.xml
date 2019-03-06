@@ -22,4 +22,9 @@
     <string name="recipe">Receita</string>
     <string name="servings">Serve 5 pessoas</string>
     <string name="ingredients">Ingredientes</string>
+
+    <plurals name="servings">
+        <item quantity="one">rende %d porção</item>
+        <item quantity="other">rende %d porçoes</item>
+    </plurals>
 </resources>
