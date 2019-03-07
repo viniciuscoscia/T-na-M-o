@@ -1,4 +1,4 @@
-package com.example.tanamao.entity.recipe;
+package com.example.tanamao.model.entity.recipe;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,43 +8,6 @@ import java.util.List;
 public class Recipe implements Parcelable {
 
     public static final String RECIPE_KEY = "recipe_key";
-
-    private String recipeId;
-    private String recipeName;
-    private float averageRating;
-    private String imagePath;
-    private int servings;
-    private String recipeInstructions;
-    private List<Ingredient> ingredientsTags;
-    private List<String> ingredients;
-
-    public Recipe() {
-    }
-
-    public Recipe(String recipeId, String recipeName, float averageRating,
-                  List<Ingredient> ingredientsTags, List<String> ingredients, String imagePath,
-                  int servings, String recipeInstructions) {
-        this.recipeId = recipeId;
-        this.recipeName = recipeName;
-        this.averageRating = averageRating;
-        this.ingredientsTags = ingredientsTags;
-        this.ingredients = ingredients;
-        this.imagePath = imagePath;
-        this.servings = servings;
-        this.recipeInstructions = recipeInstructions;
-    }
-
-    protected Recipe(Parcel in) {
-        recipeId = in.readString();
-        recipeName = in.readString();
-        averageRating = in.readFloat();
-        ingredientsTags = in.createTypedArrayList(Ingredient.CREATOR);
-        ingredients = in.createStringArrayList();
-        imagePath = in.readString();
-        servings = in.readInt();
-        recipeInstructions = in.readString();
-    }
-
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
         @Override
         public Recipe createFromParcel(Parcel in) {
@@ -56,6 +19,44 @@ public class Recipe implements Parcelable {
             return new Recipe[size];
         }
     };
+    private String recipeId;
+    private String recipeName;
+    private float averageRating;
+    private String imagePath;
+    private int servings;
+    private String recipeInstructions;
+    private List<Ingredient> ingredientsTags;
+    private List<String> ingredients;
+    private int ingredientsMatch = 0;
+
+    public Recipe() {
+    }
+
+    public Recipe(String recipeId, String recipeName, float averageRating,
+                  List<Ingredient> ingredientsTags, List<String> ingredients, String imagePath,
+                  int servings, String recipeInstructions, int ingredientsMatch) {
+        this.recipeId = recipeId;
+        this.recipeName = recipeName;
+        this.averageRating = averageRating;
+        this.ingredientsTags = ingredientsTags;
+        this.ingredients = ingredients;
+        this.imagePath = imagePath;
+        this.servings = servings;
+        this.recipeInstructions = recipeInstructions;
+        this.ingredientsMatch = ingredientsMatch;
+    }
+
+    protected Recipe(Parcel in) {
+        recipeId = in.readString();
+        recipeName = in.readString();
+        averageRating = in.readFloat();
+        ingredientsTags = in.createTypedArrayList(Ingredient.CREATOR);
+        ingredients = in.createStringArrayList();
+        imagePath = in.readString();
+        servings = in.readInt();
+        recipeInstructions = in.readString();
+        ingredientsMatch = in.readInt();
+    }
 
     public String getRecipeId() {
         return recipeId;
@@ -121,6 +122,14 @@ public class Recipe implements Parcelable {
         this.ingredients = ingredients;
     }
 
+    public int getIngredientsMatch() {
+        return ingredientsMatch;
+    }
+
+    public void setIngredientsMatch(int ingredientsMatch) {
+        this.ingredientsMatch = ingredientsMatch;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -136,5 +145,6 @@ public class Recipe implements Parcelable {
         dest.writeString(imagePath);
         dest.writeInt(servings);
         dest.writeString(recipeInstructions);
+        dest.writeInt(ingredientsMatch);
     }
 }

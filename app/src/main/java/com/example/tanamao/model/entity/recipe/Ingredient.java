@@ -1,9 +1,20 @@
-package com.example.tanamao.entity.recipe;
+package com.example.tanamao.model.entity.recipe;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Ingredient implements Parcelable {
+    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+        @Override
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        @Override
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
     private int id = -1;
     private String name;
 
@@ -24,17 +35,9 @@ public class Ingredient implements Parcelable {
         name = in.readString();
     }
 
-    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
-        @Override
-        public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
-        }
-
-        @Override
-        public Ingredient[] newArray(int size) {
-            return new Ingredient[size];
-        }
-    };
+    public static Creator<Ingredient> getCREATOR() {
+        return CREATOR;
+    }
 
     @Override
     public int describeContents() {
@@ -61,9 +64,5 @@ public class Ingredient implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public static Creator<Ingredient> getCREATOR() {
-        return CREATOR;
     }
 }

@@ -1,10 +1,15 @@
 package com.example.tanamao.ui.activity.mainActivity;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
-import com.example.tanamao.entity.recipe.Ingredient;
-import com.example.tanamao.entity.recipe.Recipe;
+import com.example.tanamao.model.entity.recipe.Ingredient;
+import com.example.tanamao.model.entity.recipe.Recipe;
 import com.example.tanamao.repository.FirebaseRepo;
+import com.example.tanamao.utils.Constants;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +18,8 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class MainViewModel extends AndroidViewModel {
 
@@ -52,13 +59,33 @@ public class MainViewModel extends AndroidViewModel {
                     if (!response.isSuccessful()) {
                         return;
                     }
-                    List<Ingredient> ingredients = Objects.requireNonNull(response
+                    List<Ingredient> repoIngredients = Objects.requireNonNull(response
                             .getResult())
                             .toObjects(Ingredient.class);
-                    availableIngredients.setValue(ingredients);
+                    List<Ingredient> persistedUserIngredients = getPersistedUserIngredients(getApplication().getBaseContext());
+                    repoIngredients = removeSavedIngredients(repoIngredients, persistedUserIngredients);
+                    availableIngredients.setValue(repoIngredients);
+                    userIngredients.setValue(persistedUserIngredients);
                 })
                 .addOnFailureListener(Throwable::printStackTrace);
         return availableIngredients;
+    }
+
+    private List<Ingredient> removeSavedIngredients(List<Ingredient> repoIngredients, List<Ingredient> persistedUserIngredients) {
+        ArrayList<Ingredient> cleanList = new ArrayList<>();
+        for (Ingredient ingredient : repoIngredients) {
+            boolean found = false;
+            for (Ingredient persistedUserIngredient : persistedUserIngredients) {
+                if (ingredient.getId() == persistedUserIngredient.getId()) {
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                cleanList.add(ingredient);
+            }
+        }
+        return cleanList;
     }
 
     public MutableLiveData<List<Recipe>> loadRecipes() {
@@ -94,6 +121,8 @@ public class MainViewModel extends AndroidViewModel {
         List<Ingredient> list = listToAdd.getValue();
         list.add(ingredient);
         listToAdd.setValue(list);
+
+        saveUserIngredients();
     }
 
 
@@ -105,4 +134,27 @@ public class MainViewModel extends AndroidViewModel {
         return userIngredients;
     }
 
+    public List<Ingredient> getPersistedUserIngredients(Context context) {
+        SharedPreferences sharedPreferences = context
+                .getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        String json = sharedPreferences.getString(Constants.SHARED_PREFERENCES_INGREDIENTS_JSON, "");
+        ArrayList<Ingredient> ingredients = new Gson().fromJson(json, new TypeToken<List<Ingredient>>() {
+        }.getType());
+
+        if (ingredients != null) {
+            return ingredients;
+        }
+
+        return new ArrayList<>();
+    }
+
+    private void saveUserIngredients() {
+        SharedPreferences sharedPreferences = this.getApplication()
+                .getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(Constants.SHARED_PREFERENCES_INGREDIENTS_JSON,
+                new Gson().toJson(userIngredients.getValue()));
+        edit.apply();
+    }
 }

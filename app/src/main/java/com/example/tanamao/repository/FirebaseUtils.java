@@ -1,22 +1,14 @@
 package com.example.tanamao.repository;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.example.tanamao.entity.recipe.Ingredient;
-import com.example.tanamao.entity.recipe.Recipe;
-import com.example.tanamao.ui.activity.mainActivity.MainActivity;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.example.tanamao.model.entity.recipe.Ingredient;
+import com.example.tanamao.model.entity.recipe.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import static com.example.tanamao.repository.FirebaseRepo.INGREDIENT_COLLECTION;
-import static com.example.tanamao.repository.FirebaseRepo.RECIPE_COLLECTION;
 
 public class FirebaseUtils {
     private FirebaseRepo firebaseRepo = FirebaseRepo.getInstance();

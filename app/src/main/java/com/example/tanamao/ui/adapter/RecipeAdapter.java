@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.tanamao.R;
-import com.example.tanamao.entity.recipe.Recipe;
+import com.example.tanamao.model.entity.recipe.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +62,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         TextView recipeName;
         TextView servings;
         RatingBar ratingBar;
+        TextView ingredientsQuant;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,6 +71,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             recipeName = itemView.findViewById(R.id.tv_recipe_name);
             servings = itemView.findViewById(R.id.tv_servings);
             ratingBar = itemView.findViewById(R.id.ratingBar);
+            ingredientsQuant = itemView.findViewById(R.id.tv_ingredients_quantity);
         }
 
         public void bind(Recipe recipe) {
@@ -79,6 +81,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             recipeName.setText(recipe.getRecipeName());
             servings.setText(context.getResources().getQuantityString(R.plurals.servings, recipe.getServings(), recipe.getServings()));
             ratingBar.setRating(recipe.getAverageRating());
+            ingredientsQuant.setText(context.getString(R.string.ingredientsQuantity,
+                    recipe.getIngredientsMatch(),
+                    recipe.getIngredientsTags().size()));
         }
 
         @Override

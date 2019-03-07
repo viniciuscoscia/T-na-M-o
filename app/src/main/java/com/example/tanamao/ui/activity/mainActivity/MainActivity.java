@@ -6,8 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.tanamao.R;
-import com.example.tanamao.entity.recipe.Ingredient;
-import com.example.tanamao.entity.recipe.Recipe;
+import com.example.tanamao.model.RecipeSearch;
+import com.example.tanamao.model.entity.recipe.Ingredient;
+import com.example.tanamao.model.entity.recipe.Recipe;
 import com.example.tanamao.repository.FirebaseUtils;
 import com.example.tanamao.ui.activity.recipeDetailActivity.RecipeDetailActivity;
 import com.example.tanamao.ui.adapter.RecipeAdapter;
@@ -17,7 +18,6 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -69,8 +69,17 @@ public class MainActivity extends AppCompatActivity
 
     private void getRecipes() {
         viewModel.loadRecipes().observe(this, recipes -> {
+            resetIngredientsMatch(recipes);
+            RecipeSearch recipeSearch = new RecipeSearch();
+            recipeSearch.recipeFilter(recipes, viewModel.getPersistedUserIngredients(this));
             recipeAdapter.setRecipeList(recipes);
         });
+    }
+
+    private void resetIngredientsMatch(List<Recipe> recipes) {
+        for (Recipe recipe : recipes) {
+            recipe.setIngredientsMatch(0);
+        }
     }
 
     private void populateChipGroups() {
@@ -89,6 +98,7 @@ public class MainActivity extends AppCompatActivity
                 chip.setOnClickListener(view -> {
                     viewModel.ingredientClickEvent(ingredient);
                     chipGroup.removeView(view);
+                    getRecipes();
                 });
                 chipGroup.addView(chip);
             }

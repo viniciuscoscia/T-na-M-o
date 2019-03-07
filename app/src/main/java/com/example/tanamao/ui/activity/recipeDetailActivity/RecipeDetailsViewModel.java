@@ -3,7 +3,7 @@ package com.example.tanamao.ui.activity.recipeDetailActivity;
 import android.app.Application;
 import android.content.Intent;
 
-import com.example.tanamao.entity.recipe.Recipe;
+import com.example.tanamao.model.entity.recipe.Recipe;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
