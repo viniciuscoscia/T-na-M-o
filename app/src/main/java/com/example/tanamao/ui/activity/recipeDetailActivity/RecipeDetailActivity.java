@@ -1,24 +1,16 @@
 package com.example.tanamao.ui.activity.recipeDetailActivity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
-
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomViewTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.tanamao.R;
-import com.example.tanamao.entity.recipe.Recipe;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
@@ -34,35 +26,40 @@ public class RecipeDetailActivity extends AppCompatActivity {
     }
 
     private void setupLayoutInfo() {
-//        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.recipe_details_toolbar_layout);
-//        Glide.with(this)
-//                .load(recipeDetailsViewModel.getRecipe().getImagePath())
-//                .into(new CustomViewTarget(collapsingToolbarLayout){
-//                    @Override
-//                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onResourceReady(@NonNull Object resource, @Nullable Transition transition) {
-//
-//                    }
-//
-//                    @Override
-//                    protected void onResourceCleared(@Nullable Drawable placeholder) {
-//                        collapsingToolbarLayout.setBackground(placeholder);
-//                    }
-//                });
-
+        //Image
         Glide.with(this)
                 .load(recipeDetailsViewModel.getRecipe().getImagePath())
                 .into((ImageView)findViewById(R.id.iv_recipe));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
-    }
+        //Title
+        final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = true;
+            int scrollRange = -1;
 
-    private void getIntentData() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbarLayout.setTitle(recipeDetailsViewModel.getRecipe().getRecipeName());
+                    isShow = true;
+                } else if(isShow) {
+                    collapsingToolbarLayout.setTitle(" ");
+                    isShow = false;
+                }
+            }
+        });
+
+        TextView recipeIngredients = findViewById(R.id.tv_ingredients);
+        for (String ingredient : recipeDetailsViewModel.getRecipe().getIngredients()) {
+            recipeIngredients.append(" - "+ ingredient + "\n");
+        }
+
+        TextView instructions = findViewById(R.id.tv_instructions);
+        instructions.setText(recipeDetailsViewModel.getRecipe().getRecipeInstructions());
     }
 
     private void setupViewModel() {
