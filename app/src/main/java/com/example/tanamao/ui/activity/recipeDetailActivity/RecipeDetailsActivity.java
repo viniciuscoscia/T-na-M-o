@@ -1,6 +1,8 @@
 package com.example.tanamao.ui.activity.recipeDetailActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +29,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     }
 
     private void setupLayoutInfo() {
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
         //Image
         Glide.with(this)
                 .load(recipeDetailsViewModel.getRecipe().getImagePath())
@@ -54,9 +59,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             }
         });
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.recipe_detail_menu);
-
         TextView recipeIngredients = findViewById(R.id.tv_ingredients);
         for (String ingredient : recipeDetailsViewModel.getRecipe().getIngredients()) {
             recipeIngredients.append(" - "+ ingredient + "\n");
@@ -71,5 +73,28 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeDetailsViewModel.getIntentData(getIntent());
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.recipe_detail_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                finish();
+//                return true;
+            case R.id.item_favorite:
+                recipeDetailsViewModel.favoriteRecipe();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 }

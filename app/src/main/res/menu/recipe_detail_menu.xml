@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_main_setting"
-        android:icon="@drawable/red_heart"
+        android:id="@+id/item_favorite"
+        android:icon="@drawable/favorite_selector"
         android:orderInCategory="100"
         android:title="@string/favorite"
         app:showAsAction="always" />

@@ -5,19 +5,36 @@ import android.os.Parcelable;
 
 import java.util.List;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "favorite_recipes")
 public class Recipe implements Parcelable {
 
     public static final String RECIPE_KEY = "recipe_key";
 
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     private String recipeId;
+    @ColumnInfo(name = "recipe_name")
     private String recipeName;
+    @ColumnInfo(name = "average_rating")
     private float averageRating;
+    @ColumnInfo(name = "image_path")
     private String imagePath;
     private int servings;
+    @ColumnInfo(name = "recipe_instructions")
     private String recipeInstructions;
+    @ColumnInfo(name = "ingredients_tags")
     private List<Ingredient> ingredientsTags;
     private List<String> ingredients;
+    @Ignore
     private int ingredientsMatch = 0;
+    @Ignore
+    private double ingredientsPercent = 0.0;
+
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
         @Override
         public Recipe createFromParcel(Parcel in) {
@@ -32,8 +49,6 @@ public class Recipe implements Parcelable {
 
     public Recipe() {
     }
-
-    private double ingredientsPercent = 0.0;
 
     public Recipe(String recipeId, String recipeName, float averageRating,
                   List<Ingredient> ingredientsTags, List<String> ingredients, String imagePath,

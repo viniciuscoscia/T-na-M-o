@@ -2,16 +2,13 @@ package com.example.tanamao.widget;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.tanamao.R;
+import com.example.tanamao.database.AppDataBase;
 import com.example.tanamao.model.entity.recipe.Recipe;
-import com.example.tanamao.utils.Constants;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -38,17 +35,7 @@ class RecipeListViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
-        SharedPreferences sharedPreferences = context
-                .getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-
-        String recipesString = sharedPreferences.getString(Constants.SHARED_PREFERENCES_FAV_RECIPES, "");
-
-        if (recipesString.equals("")) {
-            return;
-        }
-
-        recipeList = new Gson().fromJson(recipesString, new TypeToken<List<Recipe>>() {
-        }.getType());
+        recipeList = AppDataBase.getInstance(context).favoritesDao().loadFavoriteRecipes();
     }
 
     @Override
