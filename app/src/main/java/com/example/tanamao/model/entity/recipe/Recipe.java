@@ -8,6 +8,16 @@ import java.util.List;
 public class Recipe implements Parcelable {
 
     public static final String RECIPE_KEY = "recipe_key";
+
+    private String recipeId;
+    private String recipeName;
+    private float averageRating;
+    private String imagePath;
+    private int servings;
+    private String recipeInstructions;
+    private List<Ingredient> ingredientsTags;
+    private List<String> ingredients;
+    private int ingredientsMatch = 0;
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
         @Override
         public Recipe createFromParcel(Parcel in) {
@@ -19,22 +29,16 @@ public class Recipe implements Parcelable {
             return new Recipe[size];
         }
     };
-    private String recipeId;
-    private String recipeName;
-    private float averageRating;
-    private String imagePath;
-    private int servings;
-    private String recipeInstructions;
-    private List<Ingredient> ingredientsTags;
-    private List<String> ingredients;
-    private int ingredientsMatch = 0;
 
     public Recipe() {
     }
 
+    private double ingredientsPercent = 0.0;
+
     public Recipe(String recipeId, String recipeName, float averageRating,
                   List<Ingredient> ingredientsTags, List<String> ingredients, String imagePath,
-                  int servings, String recipeInstructions, int ingredientsMatch) {
+                  int servings, String recipeInstructions, int ingredientsMatch,
+                  double ingredientsPercent) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.averageRating = averageRating;
@@ -44,18 +48,7 @@ public class Recipe implements Parcelable {
         this.servings = servings;
         this.recipeInstructions = recipeInstructions;
         this.ingredientsMatch = ingredientsMatch;
-    }
-
-    protected Recipe(Parcel in) {
-        recipeId = in.readString();
-        recipeName = in.readString();
-        averageRating = in.readFloat();
-        ingredientsTags = in.createTypedArrayList(Ingredient.CREATOR);
-        ingredients = in.createStringArrayList();
-        imagePath = in.readString();
-        servings = in.readInt();
-        recipeInstructions = in.readString();
-        ingredientsMatch = in.readInt();
+        this.ingredientsPercent = ingredientsPercent;
     }
 
     public String getRecipeId() {
@@ -135,6 +128,19 @@ public class Recipe implements Parcelable {
         return 0;
     }
 
+    protected Recipe(Parcel in) {
+        recipeId = in.readString();
+        recipeName = in.readString();
+        averageRating = in.readFloat();
+        ingredientsTags = in.createTypedArrayList(Ingredient.CREATOR);
+        ingredients = in.createStringArrayList();
+        imagePath = in.readString();
+        servings = in.readInt();
+        recipeInstructions = in.readString();
+        ingredientsMatch = in.readInt();
+        ingredientsPercent = in.readDouble();
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(recipeId);
@@ -146,5 +152,14 @@ public class Recipe implements Parcelable {
         dest.writeInt(servings);
         dest.writeString(recipeInstructions);
         dest.writeInt(ingredientsMatch);
+        dest.writeDouble(ingredientsPercent);
+    }
+
+    public double getIngredientsPercent() {
+        return ingredientsPercent;
+    }
+
+    public void setIngredientsPercent(double ingredientsPercent) {
+        this.ingredientsPercent = ingredientsPercent;
     }
 }

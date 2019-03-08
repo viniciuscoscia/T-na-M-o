@@ -1,6 +1,9 @@
 package com.example.tanamao.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +84,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             recipeName.setText(recipe.getRecipeName());
             servings.setText(context.getResources().getQuantityString(R.plurals.servings, recipe.getServings(), recipe.getServings()));
             ratingBar.setRating(recipe.getAverageRating());
+            LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+            stars.getDrawable(2).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
             ingredientsQuant.setText(context.getString(R.string.ingredientsQuantity,
                     recipe.getIngredientsMatch(),
                     recipe.getIngredientsTags().size()));

@@ -10,9 +10,10 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
-public class RecipeDetailActivity extends AppCompatActivity {
+public class RecipeDetailsActivity extends AppCompatActivity {
 
     private RecipeDetailsViewModel recipeDetailsViewModel;
 
@@ -52,6 +53,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.recipe_detail_menu);
 
         TextView recipeIngredients = findViewById(R.id.tv_ingredients);
         for (String ingredient : recipeDetailsViewModel.getRecipe().getIngredients()) {

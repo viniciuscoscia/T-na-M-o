@@ -63,7 +63,7 @@ public class MainViewModel extends AndroidViewModel {
                             .getResult())
                             .toObjects(Ingredient.class);
                     List<Ingredient> persistedUserIngredients = getPersistedUserIngredients(getApplication().getBaseContext());
-                    repoIngredients = removeSavedIngredients(repoIngredients, persistedUserIngredients);
+                    repoIngredients = removePersistedIngredients(repoIngredients, persistedUserIngredients);
                     availableIngredients.setValue(repoIngredients);
                     userIngredients.setValue(persistedUserIngredients);
                 })
@@ -71,7 +71,7 @@ public class MainViewModel extends AndroidViewModel {
         return availableIngredients;
     }
 
-    private List<Ingredient> removeSavedIngredients(List<Ingredient> repoIngredients, List<Ingredient> persistedUserIngredients) {
+    private List<Ingredient> removePersistedIngredients(List<Ingredient> repoIngredients, List<Ingredient> persistedUserIngredients) {
         ArrayList<Ingredient> cleanList = new ArrayList<>();
         for (Ingredient ingredient : repoIngredients) {
             boolean found = false;

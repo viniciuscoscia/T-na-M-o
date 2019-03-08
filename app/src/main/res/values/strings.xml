@@ -25,9 +25,12 @@
     <string name="instructions">Modo de Preparo</string>
     <string name="you_has_x_ingredients">Você tem 0 de 5 ingredientes</string>
     <string name="ingredientsQuantity">Você tem %d de %d ingredientes</string>
+    <string name="no_ingredients">Não há ingredientes selecionados\nSelecione um ou mais ingredientes</string>
+    <string name="no_favorite_recipes">Não há receitas favoritas</string>
+    <string name="favorite">Favorito</string>
 
     <plurals name="servings">
         <item quantity="one">rende %d porção</item>
-        <item quantity="other">rende %d porçoes</item>
+        <item quantity="other">rende %d porções</item>
     </plurals>
 </resources>

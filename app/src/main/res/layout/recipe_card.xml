@@ -31,6 +31,7 @@
             android:layout_marginEnd="8dp"
             android:scrollHorizontally="false"
             android:textAlignment="center"
+            android:textColor="@color/secondaryColor"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -44,17 +45,19 @@
             android:layout_height="23dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textColor="@android:color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_recipe_name"
             tools:text="@string/servings" />
 
         <RatingBar
             android:id="@+id/ratingBar"
-            style="@style/Widget.AppCompat.RatingBar.Small"
+            style="@android:style/Widget.Holo.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:rating="3"
             app:layout_constraintBottom_toBottomOf="@+id/iv_recipe_photo"
             app:layout_constraintEnd_toEndOf="parent" />
 

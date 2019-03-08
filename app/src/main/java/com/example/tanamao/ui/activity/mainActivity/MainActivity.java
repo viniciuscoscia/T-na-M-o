@@ -4,13 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.tanamao.R;
 import com.example.tanamao.model.RecipeSearch;
 import com.example.tanamao.model.entity.recipe.Ingredient;
 import com.example.tanamao.model.entity.recipe.Recipe;
-import com.example.tanamao.repository.FirebaseUtils;
-import com.example.tanamao.ui.activity.recipeDetailActivity.RecipeDetailActivity;
+import com.example.tanamao.ui.activity.recipeDetailActivity.RecipeDetailsActivity;
 import com.example.tanamao.ui.adapter.RecipeAdapter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
@@ -37,17 +39,16 @@ public class MainActivity extends AppCompatActivity
     private ChipGroup availableIngredientsChipGroup;
     private ChipGroup userIngredientsChipGroup;
     private MainViewModel viewModel;
-    private FirebaseUtils firebaseUtils;
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
+    private TextView noIngredients;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
-
-        firebaseUtils = new FirebaseUtils(this);
 
         findViews();
         setupInterfaceComponents();
@@ -69,11 +70,37 @@ public class MainActivity extends AppCompatActivity
 
     private void getRecipes() {
         viewModel.loadRecipes().observe(this, recipes -> {
+            showLoading(true);
+            List<Ingredient> persistedUserIngredients = viewModel.getPersistedUserIngredients(this);
+
+            if (persistedUserIngredients.size() == 0) {
+                showNoIngredientsMessage(true);
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
+
+            if (recipes.size() == 0) {
+                return;
+            }
+
+            showNoIngredientsMessage(false);
+
             resetIngredientsMatch(recipes);
             RecipeSearch recipeSearch = new RecipeSearch();
-            recipeSearch.recipeFilter(recipes, viewModel.getPersistedUserIngredients(this));
+            recipes = recipeSearch.recipeFilter(recipes, persistedUserIngredients);
             recipeAdapter.setRecipeList(recipes);
+            showLoading(false);
         });
+    }
+
+    private void showLoading(boolean b) {
+        progressBar.setVisibility(b ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(b ? View.INVISIBLE : View.VISIBLE);
+    }
+
+    private void showNoIngredientsMessage(boolean b) {
+        noIngredients.setVisibility(b ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(b ? View.INVISIBLE : View.VISIBLE);
     }
 
     private void resetIngredientsMatch(List<Recipe> recipes) {
@@ -113,6 +140,8 @@ public class MainActivity extends AppCompatActivity
         availableIngredientsChipGroup = findViewById(R.id.cg_available_ingredients);
         userIngredientsChipGroup = findViewById(R.id.cg_user_ingredients);
         recyclerView = findViewById(R.id.rv_recipes);
+        noIngredients = findViewById(R.id.tv_no_ingredients);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void setupInterfaceComponents() {
@@ -139,7 +168,6 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
     }
-
 
     @Override
     public void onBackPressed() {
@@ -172,7 +200,6 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -194,7 +221,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void startRecipeActivity(Recipe recipe) {
-        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        Intent intent = new Intent(this, RecipeDetailsActivity.class);
         intent.putExtra(Recipe.RECIPE_KEY, recipe);
         startActivity(intent);
     }

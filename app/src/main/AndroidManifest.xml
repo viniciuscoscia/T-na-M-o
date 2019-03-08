@@ -12,7 +12,7 @@
         android:theme="@style/AppThemeAppCompat"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.activity.recipeDetailActivity.RecipeDetailActivity"
+            android:name=".ui.activity.recipeDetailActivity.RecipeDetailsActivity"
             android:label="RECEITA"
             android:theme="@style/AppThemeMaterial.NoActionBar"/>
         <activity
@@ -24,6 +24,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".widget.RecipesWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipes_widget_info" />
+        </receiver>
+
+        <service android:name=".widget.RecipesChangeService" />
+
+        <service
+            android:name=".widget.RecipeListService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>
