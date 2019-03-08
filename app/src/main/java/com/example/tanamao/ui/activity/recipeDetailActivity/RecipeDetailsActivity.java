@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 public class RecipeDetailsActivity extends AppCompatActivity {
 
     private RecipeDetailsViewModel recipeDetailsViewModel;
+    private MenuItem favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         TextView instructions = findViewById(R.id.tv_instructions);
         instructions.setText(recipeDetailsViewModel.getRecipe().getRecipeInstructions());
+
     }
 
     private void setupViewModel() {
@@ -75,22 +77,28 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.recipe_detail_menu, menu);
+
+        favorite = menu.findItem(R.id.item_favorite);
+
+        recipeDetailsViewModel.getIsRecipeFavorite().observe(this, isFavorite -> {
+            if (isFavorite) {
+                favorite.setIcon(R.drawable.red_heart);
+            } else {
+                favorite.setIcon(R.drawable.grey_heart);
+            }
+        });
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
 //            case android.R.id.home:
 //                finish();
 //                return true;
             case R.id.item_favorite:
-                recipeDetailsViewModel.favoriteRecipe();
+                recipeDetailsViewModel.favoriteUnfavoriteRecipe();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

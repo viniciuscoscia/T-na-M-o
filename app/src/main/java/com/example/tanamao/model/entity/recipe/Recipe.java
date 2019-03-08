@@ -3,18 +3,24 @@ package com.example.tanamao.model.entity.recipe;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.tanamao.database.IngredientListTypeConverter;
+import com.example.tanamao.database.IngredientTagsTypeConverter;
+
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 @Entity(tableName = "favorite_recipes")
 public class Recipe implements Parcelable {
 
     public static final String RECIPE_KEY = "recipe_key";
 
+    @NonNull
     @PrimaryKey
     @ColumnInfo(name = "id")
     private String recipeId;
@@ -28,7 +34,9 @@ public class Recipe implements Parcelable {
     @ColumnInfo(name = "recipe_instructions")
     private String recipeInstructions;
     @ColumnInfo(name = "ingredients_tags")
+    @TypeConverters(IngredientTagsTypeConverter.class)
     private List<Ingredient> ingredientsTags;
+    @TypeConverters(IngredientListTypeConverter.class)
     private List<String> ingredients;
     @Ignore
     private int ingredientsMatch = 0;

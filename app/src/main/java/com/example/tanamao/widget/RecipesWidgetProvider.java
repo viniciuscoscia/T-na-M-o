@@ -1,5 +1,6 @@
 package com.example.tanamao.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -7,14 +8,9 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.tanamao.R;
+import com.example.tanamao.ui.activity.mainActivity.MainActivity;
 
 public class RecipesWidgetProvider extends AppWidgetProvider {
-
-    public static void updateRecipesWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
-        }
-    }
 
     private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         RemoteViews rv = getRecipesRemoteView(context);
@@ -29,11 +25,17 @@ public class RecipesWidgetProvider extends AppWidgetProvider {
         views.setRemoteAdapter(R.id.lv_recipes, intent);
 
         //TODO Open Recipe
-//        Intent appIntent = new Intent(context, MainActivity.class);
-//        PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        views.setPendingIntentTemplate(R.id.ingredients_view, appPendingIntent);
-//        views.setEmptyView(R.id.lv_ingredients, R.id.empty_view);
+        Intent appIntent = new Intent(context, MainActivity.class);
+        PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setPendingIntentTemplate(R.id.recipes_view, appPendingIntent);
+        views.setEmptyView(R.id.lv_recipes, R.id.empty_view);
         return views;
+    }
+
+    public static void updateRecipesWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
+        }
     }
 
     @Override

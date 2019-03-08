@@ -2,13 +2,13 @@ package com.example.tanamao.widget;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.tanamao.R;
 import com.example.tanamao.database.AppDataBase;
 import com.example.tanamao.model.entity.recipe.Recipe;
+import com.example.tanamao.ui.activity.recipeDetailActivity.RecipeDetailsActivity;
 
 import java.util.List;
 
@@ -50,15 +50,13 @@ class RecipeListViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public RemoteViews getViewAt(int position) {
-
+        Recipe recipe = recipeList.get(position);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_for_widget);
-        views.setTextViewText(R.id.tv_recipe, recipeList.get(position).getRecipeName());
+        views.setTextViewText(R.id.tv_recipe, recipe.getRecipeName());
 
         // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
-        Bundle extras = new Bundle();
-        extras.putParcelable(Recipe.RECIPE_KEY, recipeList.get(position));
-        Intent fillInIntent = new Intent();
-        fillInIntent.putExtras(extras);
+        Intent fillInIntent = new Intent(context, RecipeDetailsActivity.class);
+        fillInIntent.putExtra(Recipe.RECIPE_KEY, recipe);
         views.setOnClickFillInIntent(R.id.tv_recipe, fillInIntent);
 
         return views;
@@ -71,7 +69,7 @@ class RecipeListViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override

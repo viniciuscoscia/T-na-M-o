@@ -1,27 +1,27 @@
 package com.example.tanamao.ui.activity.recipeDetailActivity;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
 
+import com.example.tanamao.database.AppDataBase;
+import com.example.tanamao.database.FavoritesDAO;
 import com.example.tanamao.model.entity.recipe.Recipe;
-import com.example.tanamao.utils.Constants;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
 public class RecipeDetailsViewModel extends AndroidViewModel {
 
     private Recipe recipe;
+    private MutableLiveData<Boolean> isRecipeFavorite = new MutableLiveData<>();
+    private FavoritesDAO dao;
 
     public RecipeDetailsViewModel(@NonNull Application application) {
         super(application);
+        dao = AppDataBase.getInstance(getApplication()).favoritesDao();
+        isRecipeFavorite.setValue(false);
     }
 
     public Recipe getRecipe() {
@@ -34,32 +34,49 @@ public class RecipeDetailsViewModel extends AndroidViewModel {
 
     public void getIntentData(Intent intent) {
         recipe = intent.getParcelableExtra(Recipe.RECIPE_KEY);
+        checkRecipeFavorite();
     }
 
-    public void favoriteRecipe() {
-        SharedPreferences sharedPreferences = getApplication()
-                .getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+    public void favoriteUnfavoriteRecipe() {
 
-        String recipesString = sharedPreferences.getString(Constants.SHARED_PREFERENCES_FAV_RECIPES, "");
+        new AsyncTask<Void, Void, Void>() {
 
-        if (recipesString.equals("")) {
-            return;
-        }
-
-        List<Recipe> recipeList = new Gson().fromJson(recipesString, new TypeToken<List<Recipe>>() {
-        }.getType());
-        dealWithFavorite(recipeList);
-    }
-
-    private void dealWithFavorite(List<Recipe> recipeList) {
-        boolean found = false;
-        List<Recipe> cleanList = new ArrayList<>();
-        for (Recipe favRecipe : recipeList) {
-            if (favRecipe.getRecipeId().equals(recipe.getRecipeId())) {
-                found = true;
-                continue;
+            @Override
+            protected Void doInBackground(Void... voids) {
+                if (isRecipeFavorite.getValue()) {
+                    dao.deleteFavoriteRecipe(recipe);
+                } else {
+                    dao.insertRecipe(recipe);
+                }
+                checkRecipeFavorite();
+                return null;
             }
-            cleanList.add(favRecipe);
-        }
+
+        }.execute();
+
+    }
+
+    public void checkRecipeFavorite() {
+        AppDataBase appDataBase = AppDataBase.getInstance(getApplication());
+
+        new AsyncTask<Recipe, Recipe, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Recipe... recipes) {
+                if (appDataBase.favoritesDao().loadFavoriteRecipeById(recipe.getRecipeId()) == null)
+                    return false;
+                else
+                    return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                super.onPostExecute(result);
+                isRecipeFavorite.setValue(result);
+            }
+        }.execute();
+    }
+
+    public MutableLiveData<Boolean> getIsRecipeFavorite() {
+        return isRecipeFavorite;
     }
 }

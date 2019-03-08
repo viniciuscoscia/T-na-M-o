@@ -31,5 +31,5 @@ public interface FavoritesDAO {
     void deleteFavoriteRecipe(Recipe recipe);
 
     @Query("SELECT * FROM favorite_recipes WHERE id = :id")
-    Recipe loadFavoriteRecipeById(long id);
+    Recipe loadFavoriteRecipeById(String id);
 }
