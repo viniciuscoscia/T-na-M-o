@@ -33,6 +33,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 
     //RETROFIT
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -54,7 +55,6 @@ dependencies {
     //GLIDE
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
 
     //ROOM
     implementation "android.arch.persistence.room:runtime:1.1.1"

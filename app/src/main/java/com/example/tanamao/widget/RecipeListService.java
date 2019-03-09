@@ -1,5 +1,6 @@
 package com.example.tanamao.widget;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -54,10 +55,13 @@ class RecipeListViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_for_widget);
         views.setTextViewText(R.id.tv_recipe, recipe.getRecipeName());
 
-        // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
-        Intent fillInIntent = new Intent(context, RecipeDetailsActivity.class);
+        Intent fillInIntent = new Intent();
         fillInIntent.putExtra(Recipe.RECIPE_KEY, recipe);
         views.setOnClickFillInIntent(R.id.tv_recipe, fillInIntent);
+
+        // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, fillInIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        views.setOnClickPendingIntent(R.id.tv_recipe, pendingIntent);
 
         return views;
     }

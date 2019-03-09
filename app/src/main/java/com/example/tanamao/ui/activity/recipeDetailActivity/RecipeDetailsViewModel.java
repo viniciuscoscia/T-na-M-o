@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.example.tanamao.database.AppDataBase;
 import com.example.tanamao.database.FavoritesDAO;
 import com.example.tanamao.model.entity.recipe.Recipe;
+import com.example.tanamao.widget.RecipesChangeService;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -48,6 +49,7 @@ public class RecipeDetailsViewModel extends AndroidViewModel {
                 } else {
                     dao.insertRecipe(recipe);
                 }
+                RecipesChangeService.changeIngredientsListWidget(getApplication());
                 checkRecipeFavorite();
                 return null;
             }

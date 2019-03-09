@@ -9,6 +9,7 @@ import android.widget.RemoteViews;
 
 import com.example.tanamao.R;
 import com.example.tanamao.ui.activity.mainActivity.MainActivity;
+import com.example.tanamao.ui.activity.recipeDetailActivity.RecipeDetailsActivity;
 
 public class RecipesWidgetProvider extends AppWidgetProvider {
 
@@ -25,10 +26,11 @@ public class RecipesWidgetProvider extends AppWidgetProvider {
         views.setRemoteAdapter(R.id.lv_recipes, intent);
 
         //TODO Open Recipe
-        Intent appIntent = new Intent(context, MainActivity.class);
-        PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setPendingIntentTemplate(R.id.recipes_view, appPendingIntent);
+        Intent startActivityIntent = new Intent(context, RecipeDetailsActivity.class);
+        PendingIntent startActivityPendingIntent  = PendingIntent.getActivity(context, 0, startActivityIntent , PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setPendingIntentTemplate(R.id.lv_recipes, startActivityPendingIntent);
         views.setEmptyView(R.id.lv_recipes, R.id.empty_view);
+
         return views;
     }
 
