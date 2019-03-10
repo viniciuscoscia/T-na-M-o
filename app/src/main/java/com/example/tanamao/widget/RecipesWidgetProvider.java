@@ -25,7 +25,6 @@ public class RecipesWidgetProvider extends AppWidgetProvider {
 
         views.setRemoteAdapter(R.id.lv_recipes, intent);
 
-        //TODO Open Recipe
         Intent startActivityIntent = new Intent(context, RecipeDetailsActivity.class);
         PendingIntent startActivityPendingIntent  = PendingIntent.getActivity(context, 0, startActivityIntent , PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.lv_recipes, startActivityPendingIntent);

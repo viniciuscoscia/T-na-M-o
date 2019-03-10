@@ -17,6 +17,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
 
+    //Muito bom implementar a Toolbar.
+    //Sugiro implementar também Up Navigation pois o usuário deveria conseguir voltar sem precisar utilizar o botão "físico" de voltar do android.
+
     private RecipeDetailsViewModel recipeDetailsViewModel;
     private MenuItem favorite;
 
