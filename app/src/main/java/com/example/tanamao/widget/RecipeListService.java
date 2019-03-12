@@ -1,6 +1,5 @@
 package com.example.tanamao.widget;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -9,7 +8,6 @@ import android.widget.RemoteViewsService;
 import com.example.tanamao.R;
 import com.example.tanamao.database.AppDataBase;
 import com.example.tanamao.model.entity.recipe.Recipe;
-import com.example.tanamao.ui.activity.recipeDetailActivity.RecipeDetailsActivity;
 
 import java.util.List;
 
@@ -58,10 +56,6 @@ class RecipeListViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         Intent fillInIntent = new Intent();
         fillInIntent.putExtra(Recipe.RECIPE_KEY, recipe);
         views.setOnClickFillInIntent(R.id.tv_recipe, fillInIntent);
-
-        // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
-//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, fillInIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        views.setOnClickPendingIntent(R.id.tv_recipe, pendingIntent);
 
         return views;
     }

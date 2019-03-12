@@ -28,6 +28,9 @@
     <string name="no_ingredients">Não há ingredientes selecionados\nSelecione um ou mais ingredientes</string>
     <string name="no_favorite_recipes">Não há receitas favoritas</string>
     <string name="favorite">Favorito</string>
+    <string name="recipe_image_description">Foto da receita</string>
+    <string name="arrow_description">Seta indicadora para meus ingredientes</string>
+    <string name="home">Tela inicial</string>
 
     <plurals name="servings">
         <item quantity="one">rende %d porção</item>

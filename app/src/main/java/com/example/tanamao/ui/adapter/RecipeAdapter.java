@@ -27,7 +27,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     private RecipeClickListener recipeClickListener;
 
     public interface RecipeClickListener {
-        void startRecipeActivity(Recipe recipe);
+        void startRecipeActivity(Recipe recipe, View v);
     }
 
     public RecipeAdapter(Context context, RecipeClickListener recipeClickListener) {
@@ -93,7 +93,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
         @Override
         public void onClick(View v) {
-            recipeClickListener.startRecipeActivity(recipeList.get(getAdapterPosition()));
+            recipeClickListener.startRecipeActivity(recipeList.get(getAdapterPosition()), recipePhoto);
         }
     }
 }

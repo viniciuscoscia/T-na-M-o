@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.tanamao.database.AppDataBase;
 import com.example.tanamao.model.entity.recipe.Ingredient;
 import com.example.tanamao.model.entity.recipe.Recipe;
 import com.example.tanamao.repository.FirebaseRepo;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
@@ -88,21 +90,20 @@ public class MainViewModel extends AndroidViewModel {
         return cleanList;
     }
 
-    public MutableLiveData<List<Recipe>> loadRecipes() {
+    public void loadRecipes() {
         firebaseRepo
                 .getRecipes()
-                        .addOnCompleteListener(response -> {
-                            if (!response.isSuccessful()) {
-                                return;
-                            }
-                            List<Recipe> recipes = Objects
-                                    .requireNonNull(response.getResult())
-                                    .toObjects(Recipe.class);
+                .addOnCompleteListener(response -> {
+                    if (!response.isSuccessful()) {
+                        return;
+                    }
+                    List<Recipe> recipes = Objects
+                            .requireNonNull(response.getResult())
+                            .toObjects(Recipe.class);
 
-                            recipeList.setValue(recipes);
-                        })
+                    recipeList.setValue(recipes);
+                })
                 .addOnFailureListener(Throwable::printStackTrace);
-        return recipeList;
     }
 
     public void ingredientClickEvent(Ingredient ingredient) {
@@ -156,5 +157,21 @@ public class MainViewModel extends AndroidViewModel {
         edit.putString(Constants.SHARED_PREFERENCES_INGREDIENTS_JSON,
                 new Gson().toJson(userIngredients.getValue()));
         edit.apply();
+    }
+
+    public void loadFavorites(AppCompatActivity appCompatActivity) {
+        AppDataBase.getInstance(appCompatActivity)
+                .favoritesDao()
+                .loadFavoriteRecipesLiveData()
+                .observe(appCompatActivity, receitas -> {
+                    if (receitas == null) {
+                        return;
+                    }
+                    recipeList.setValue(receitas);
+                });
+    }
+
+    public MutableLiveData<List<Recipe>> getRecipeList() {
+        return recipeList;
     }
 }

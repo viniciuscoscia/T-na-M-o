@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.google.firebase.FirebaseApp;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -34,7 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        RecipeAdapter.RecipeClickListener{
+        RecipeAdapter.RecipeClickListener {
 
     private ChipGroup availableIngredientsChipGroup;
     private ChipGroup userIngredientsChipGroup;
@@ -42,7 +44,9 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
     private TextView noIngredients;
+    private TextView bottomSheetTitle;
     private ProgressBar progressBar;
+    private ImageView arrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity
         getRecipes();
 
         populateChipGroups();
+
     }
 
     private void setupReciclerView() {
@@ -69,7 +74,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getRecipes() {
-        viewModel.loadRecipes().observe(this, recipes -> {
+        viewModel.getRecipeList().observe(this, recipes -> {
             showLoading(true);
             List<Ingredient> persistedUserIngredients = viewModel.getPersistedUserIngredients(this);
 
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity
             recipeAdapter.setRecipeList(recipes);
             showLoading(false);
         });
+        viewModel.loadRecipes();
     }
 
     private void showLoading(boolean b) {
@@ -142,6 +148,8 @@ public class MainActivity extends AppCompatActivity
         recyclerView = findViewById(R.id.rv_recipes);
         noIngredients = findViewById(R.id.tv_no_ingredients);
         progressBar = findViewById(R.id.progressBar);
+        arrow = findViewById(R.id.iv_arrow);
+        bottomSheetTitle = findViewById(R.id.tv_bottom_sheet_title);
     }
 
     private void setupInterfaceComponents() {
@@ -152,6 +160,44 @@ public class MainActivity extends AppCompatActivity
 
     private void setupBottomSheet() {
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet_layout));
+        bottomSheetBehavior.setHideable(false);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                        arrow.setImageDrawable(getDrawable(R.drawable.ic_keyboard_arrow_down_black_24dp));
+                        break;
+                    }
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                        arrow.setImageDrawable(getDrawable(R.drawable.ic_keyboard_arrow_up_white_24dp));
+                        break;
+                    }
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float newState) {
+
+            }
+        });
+
+        bottomSheetTitle.setOnClickListener(v -> {
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                arrow.setImageDrawable(getDrawable(R.drawable.ic_keyboard_arrow_up_white_24dp));
+            } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                arrow.setImageDrawable(getDrawable(R.drawable.ic_keyboard_arrow_down_black_24dp));
+            }
+        });
     }
 
     private void setupNavigationView() {
@@ -200,6 +246,7 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -207,11 +254,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_favorites) {
-            // Handle the camera action
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            viewModel.loadFavorites(this);
+            return true;
+        } else if (id == R.id.home) {
+            viewModel.loadRecipes();
+            return true;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -220,9 +267,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void startRecipeActivity(Recipe recipe) {
+    public void startRecipeActivity(Recipe recipe, View v) {
         Intent intent = new Intent(this, RecipeDetailsActivity.class);
         intent.putExtra(Recipe.RECIPE_KEY, recipe);
         startActivity(intent);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 }

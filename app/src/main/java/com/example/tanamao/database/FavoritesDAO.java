@@ -15,6 +15,9 @@ import androidx.room.Update;
 
 @Dao
 public interface FavoritesDAO {
+
+    /* I've got some NPEs using LiveData loadFavoriteRecipesLiveData() method in the widget, so
+     * chose to keep two methods with different returns */
     @Query("SELECT * FROM favorite_recipes ORDER BY id")
     List<Recipe> loadFavoriteRecipes();
 

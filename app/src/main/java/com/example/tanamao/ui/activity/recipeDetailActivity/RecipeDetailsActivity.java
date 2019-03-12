@@ -28,6 +28,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
+        supportPostponeEnterTransition();
         setupViewModel();
         setupLayoutInfo();
     }
@@ -35,6 +36,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private void setupLayoutInfo() {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Image
         Glide.with(this)
@@ -97,9 +101,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case android.R.id.home:
-//                finish();
-//                return true;
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                return true;
             case R.id.item_favorite:
                 recipeDetailsViewModel.favoriteUnfavoriteRecipe();
                 return true;
@@ -108,4 +113,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+    }
 }
